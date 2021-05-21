@@ -1,0 +1,10 @@
+BLT, Sandwitch, 3.80
+Ham salad sandwich, sandwitch, 4.50
+veggie Sandwich, sandwitch, 4.50
+Chicken panini, panini, 4.80
+Hawaiian panini, panini, 4.50
+Breakfast burrito, extra, 4.80
+Nachos, extra, 3.50
+Wedges, extra, 3.00
+Hash Browns, extra, 1.20
+Garlic Bread, extra, 1.50
