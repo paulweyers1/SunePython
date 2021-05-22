@@ -6,6 +6,7 @@ import tkinter.messagebox
 # create the window and give it a title
 root = Tk()
 root.title("Kapiti College Canteen Order form")
+#root.configure(background="green")
 
 # Global variables and constant values
 GST_factor = 3/23  # Factor to help calculate GST
@@ -17,12 +18,12 @@ amount_list = []   # list of amount fields
 #List of food items and their prices (In $)
 #CHECK PRICE OF FOOD
 price_list = [
-    ["BLT",  3.80, "sandwitch"],
-    ["Ham salad sandwich" ,4.50],
-    ["veggie Sandwich",4.50 ],
-    ["Chicken panini",4.80],
-    ["Hawaiian panini",4.50],
-    ["Breakfast burrito",4.80],
+    ["BLT Sandwich",3.80],
+    ["Ham Salad Sandwich",4.50],
+    ["Veggie Sandwich",4.50],
+    ["Chicken Panini",4.80],
+    ["Hawaiian Panini",4.50],
+    ["Breakfast Burrito",4.80],
     ["Nachos",3.50],
     ["Wedges",3.00],
     ["Hash Browns",1.20],
@@ -42,6 +43,7 @@ customer_name = ttk.Label(root, text="Customer Name:")
 customer_name.grid(row=2, column=0, padx=10, pady=3)
 customer_input = ttk.Entry(root)
 customer_input.grid(row=2, column=1, padx=10, pady=10, sticky="WE")
+customer_input.focus_set()
 
 # Label and entry box to display the total at the end of the code
 total_label = ttk.Label(root, text="Total Price (Includes GST):  $")
@@ -85,9 +87,11 @@ def take_order():
             value = amount_list[i].get()
             if check_value(value) == 0:
                 reset_flag = 1
-                total_price += int(value) * float(price_list[i][1])
+                if value.isdigit():
+                    total_price += int(value) * float(price_list[i][1])
             else:
                 reset_flag = 0
+                amount_list[i].focus_set()
                 break
 
     # If the order was added clear the fields else leave them
@@ -100,13 +104,15 @@ def take_order():
         GST_string = '%.2f' % GST
         GST1_label.configure(text= str("$ "+GST_string))
 
-        # construct an order number
+        # construct an order number - add leading zeros
         order_no = str(order_number).zfill(3)
 
-        # Append new order to order list
+        # Append order to order list
         order_list.append(("ord-"+order_no, str(customer_input.get()), str("$ "+total_string), str("$ "+GST_string)))
         order_number+=1
         t = Order_Table(root)
+
+        customer_input.focus_set()
 
         # Reset the fields for next order
         customer_input.delete(0,END)
@@ -123,7 +129,8 @@ def focus_out(event = None):
     # Validate fields and calculate total price for order
     for i in range(len(price_list)):
         value = amount_list[i].get()
-        total_price += int(value) * float(price_list[i][1])
+        if value.isdigit():
+            total_price += int(value) * float(price_list[i][1])
 
     # Calculate total and GST
     GST =  total_price*GST_factor
@@ -159,7 +166,7 @@ def open_menu():
 def check_value(value):
 
     if not(value.isdigit()):
-        tkinter.messagebox.showerror("Data Error", "Please only enter numerical values")
+        tkinter.messagebox.showerror("Data Error", "Please only enter numerical values for order item amount")
         return 1
 
     elif (int(value) > MAX):
@@ -173,6 +180,7 @@ def check_customer_name(customer_name):
 
     if (len(customer_name)  == 0 or customer_name.isdigit()):
         tkinter.messagebox.showerror("Data Error", "Please input a non numeric name value for Customer name")
+        customer_input.focus_set()
         return 1
 
     return 0
